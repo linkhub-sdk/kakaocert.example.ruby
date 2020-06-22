@@ -1,0 +1,11 @@
+<div id="content">
+  <p class="heading1">Exception</p>
+  <br/>
+  <fieldset class="fieldset1">
+    <legend><%= request.env['PATH_INFO'] %></legend>
+    <ul>
+      <li>code (응답코드) : <%= @Response.code %></li>
+      <li>message (응답메시지) : <%= @Response.message %></li>
+    </ul>
+  </fieldset>
+</div>
