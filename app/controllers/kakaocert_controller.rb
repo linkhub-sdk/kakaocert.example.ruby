@@ -2,7 +2,7 @@
 #
 # Kakaocert API Ruby On Rails SDK Example
 #
-# 업데이트 일자 : 2020-06-22
+# 업데이트 일자 : 2020-09-03
 # 연동기술지원 연락처 : 1600-9854 / 070-4304-2991~2
 # 연동기술지원 이메일 : code@linkhub.co.kr
 #
@@ -33,6 +33,10 @@ class KakaocertController < ApplicationController
     #  전자서명 요청정보 객체
     requestInfo = {
 
+      # AppToApp 인증여부
+      # true - AppToApp 인증, false - TalkMessage 인증
+      "isAppUseYN" => false,
+
       # 고객센터 전화번호, 카카오톡 인증메시지 중 "고객센터" 항목에 표시
       "CallCenterNum" => '1600-8536',
 
@@ -40,20 +44,22 @@ class KakaocertController < ApplicationController
       "Expires_in" => 60,
 
       # 수신자 생년월일, 형식 : YYYYMMDD
-      "ReceiverBirthDay" => '19900108',
+      "ReceiverBirthDay" => '19800101',
 
       # 수신자 휴대폰번호
       "ReceiverHP" => '010111222',
 
       # 수신자 성명
-      "ReceiverName" => '홍길동',
+      "ReceiverName" => '테스트',
 
       # 별칭코드, 이용기관이 생성한 별칭코드 (파트너 사이트에서 확인가능)
       # 카카오톡 인증메시지 중 "요청기관" 항목에 표시
       # 별칭코드 미 기재시 이용기관의 이용기관명이 "요청기관" 항목에 표시
+      # AppToApp 인증시 미적용
       "SubClientID" => '',
 
       # 인증요청 메시지 부가내용, 카카오톡 인증메시지 중 상단에 표시
+      # AppToApp 인증시 미적용
       "TMSMessage" => 'TMSMessage0423',
 
       # 인증요청 메시지 제목, 카카오톡 인증메시지 중 "요청구분" 항목에 표시
@@ -82,8 +88,7 @@ class KakaocertController < ApplicationController
         KakaocertController::ClientCode,
         requestInfo,
       )
-      @name = "ReceiptID(접수아이디)"
-      render "home/result"
+      render "home/responseESign"
     rescue KakaocertException => pe
       @Response = pe
       render "home/exception"
@@ -94,10 +99,14 @@ class KakaocertController < ApplicationController
   def getESignResult
 
     # 전자서명 요청시 반환받은 접수아이디
-    receiptId = "020062215404400001"
+    receiptId = "020090214151300001"
+
+    # AppToApp 인증 성공시 앱스킴으로 반환되는 signature값 기재
+    # Talk Message 인증시 공백처리
+    signture = ""
 
     begin
-      @Response = KCService.getESignResult(KakaocertController::ClientCode, receiptId)
+      @Response = KCService.getESignResult(KakaocertController::ClientCode, receiptId, signture)
       render "kakaocert/getESignResult"
     rescue KakaocertException => pe
       @Response = pe

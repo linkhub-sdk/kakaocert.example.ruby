@@ -1,0 +1,11 @@
+<div id="content">
+  <p class="heading1">Exception</p>
+  <br/>
+  <fieldset class="fieldset1">
+    <legend><%= request.env['PATH_INFO'] %></legend>
+    <ul>
+      <li>receiptId (접수아이디) : <%= @value['receiptId'] %></li>
+      <li>tx_id (카카오톡 트랜잭션아이디[AppToApp 앱스킴호출용]) : <%= @value['tx_id'] %></li>
+    </ul>
+  </fieldset>
+</div>
