@@ -2,7 +2,7 @@
 #
 # Kakaocert API Ruby On Rails SDK Example
 #
-# 업데이트 일자 : 2020-09-03
+# 업데이트 일자 : 2020-09-02
 # 연동기술지원 연락처 : 1600-9854 / 070-4304-2991~2
 # 연동기술지원 이메일 : code@linkhub.co.kr
 #
