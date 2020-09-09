@@ -1,0 +1,11 @@
+<div id="content">
+  <p class="heading1">Exception</p>
+  <br/>
+  <fieldset class="fieldset1">
+    <legend><%= request.env['PATH_INFO'] %></legend>
+    <ul>
+      <li>receiptId (접수아이디) : <%= @Response['receiptId'] %></li>
+      <li>signedData (전자서명 데이터 전문) : <%= @Response['signedData'] %></li>
+    </ul>
+  </fieldset>
+</div>

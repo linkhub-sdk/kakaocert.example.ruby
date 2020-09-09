@@ -2,7 +2,7 @@
 #
 # Kakaocert API Ruby On Rails SDK Example
 #
-# 업데이트 일자 : 2020-09-02
+# 업데이트 일자 : 2020-09-09
 # 연동기술지원 연락처 : 1600-9854 / 070-4304-2991~2
 # 연동기술지원 이메일 : code@linkhub.co.kr
 #
@@ -27,7 +27,7 @@ class KakaocertController < ApplicationController
       KakaocertController::SecretKey
   )
 
-  # 전자서명을 요청합니다.
+  # 전자서명 인증을 요청합니다.
   def requestESign
 
     #  전자서명 요청정보 객체
@@ -44,13 +44,13 @@ class KakaocertController < ApplicationController
       "Expires_in" => 60,
 
       # 수신자 생년월일, 형식 : YYYYMMDD
-      "ReceiverBirthDay" => '19800101',
+      "ReceiverBirthDay" => '19700101',
 
       # 수신자 휴대폰번호
-      "ReceiverHP" => '010111222',
+      "ReceiverHP" => '0101111222',
 
       # 수신자 성명
-      "ReceiverName" => '테스트',
+      "ReceiverName" => '홍길동',
 
       # 별칭코드, 이용기관이 생성한 별칭코드 (파트너 사이트에서 확인가능)
       # 카카오톡 인증메시지 중 "요청기관" 항목에 표시
@@ -95,19 +95,34 @@ class KakaocertController < ApplicationController
     end
   end
 
-  # 전자서명 요청결과를 확인합니다.
-  def getESignResult
+  # 전자서명 서명상태를 확인합니다.
+  def getESignState
 
     # 전자서명 요청시 반환받은 접수아이디
-    receiptId = "020090214151300001"
+    receiptId = "020090911171900002"
+
+    begin
+      @Response = KCService.getESignState(KakaocertController::ClientCode, receiptId)
+      render "kakaocert/getESignState"
+    rescue KakaocertException => pe
+      @Response = pe
+      render "home/exception"
+    end
+  end
+
+  # 전자서명 서명을 검증합니다.
+  def verifyESign
+
+    # 전자서명 요청시 반환받은 접수아이디
+    receiptId = "020090911171900002"
 
     # AppToApp 인증 성공시 앱스킴으로 반환되는 signature값 기재
     # Talk Message 인증시 공백처리
     signture = ""
 
     begin
-      @Response = KCService.getESignResult(KakaocertController::ClientCode, receiptId, signture)
-      render "kakaocert/getESignResult"
+      @Response = KCService.verifyESign(KakaocertController::ClientCode, receiptId, signture)
+      render "kakaocert/responseVerify"
     rescue KakaocertException => pe
       @Response = pe
       render "home/exception"
@@ -129,10 +144,10 @@ class KakaocertController < ApplicationController
       "Expires_in" => 60,
 
       # 수신자 생년월일, 형식 : YYYYMMDD
-      "ReceiverBirthDay" => '19900108',
+      "ReceiverBirthDay" => '19700101',
 
       # 수신자 휴대폰번호
-      "ReceiverHP" => '010111222',
+      "ReceiverHP" => '0101111222',
 
       # 수신자 성명
       "ReceiverName" => '홍길동',
@@ -171,7 +186,7 @@ class KakaocertController < ApplicationController
         KakaocertController::ClientCode,
         requestInfo,
       )
-      @name = "ReceiptID(접수아이디)"
+      @name = "receiptId(접수아이디)"
       render "home/result"
     rescue KakaocertException => pe
       @Response = pe
@@ -179,15 +194,30 @@ class KakaocertController < ApplicationController
     end
   end
 
-  # 본인인증 요청결과를 확인합니다.
-  def getVerifyAuthResult
+  # 본인인증 서명상태를 확인합니다.
+  def getVerifyAuthState
 
     # 본인인증 요청시 반환받은 접수아이디
-    receiptId = "020062215441600001"
+    receiptId = "020090911180300001"
 
     begin
-      @Response = KCService.getVerifyAuthResult(KakaocertController::ClientCode, receiptId)
-      render "kakaocert/getVerifyAuthResult"
+      @Response = KCService.getVerifyAuthState(KakaocertController::ClientCode, receiptId)
+      render "kakaocert/getVerifyAuthState"
+    rescue KakaocertException => pe
+      @Response = pe
+      render "home/exception"
+    end
+  end
+
+  # 본인인증 서명을 검증합니다.
+  def verifyAuth
+
+    # 본인인증 요청시 반환받은 접수아이디
+    receiptId = "020090911180300001"
+
+    begin
+      @Response = KCService.verifyAuth(KakaocertController::ClientCode, receiptId)
+      render "kakaocert/responseVerify"
     rescue KakaocertException => pe
       @Response = pe
       render "home/exception"
@@ -210,10 +240,10 @@ class KakaocertController < ApplicationController
       "Expires_in" => 60,
 
       # 수신자 생년월일, 형식 : YYYYMMDD
-      "ReceiverBirthDay" => '19900108',
+      "ReceiverBirthDay" => '19700101',
 
       # 수신자 휴대폰번호
-      "ReceiverHP" => '010111222',
+      "ReceiverHP" => '0101111222',
 
       # 수신자 성명
       "ReceiverName" => '홍길동',
@@ -261,7 +291,7 @@ class KakaocertController < ApplicationController
         KakaocertController::ClientCode,
         requestInfo,
       )
-      @name = "ReceiptID(접수아이디)"
+      @name = "receiptId(접수아이디)"
       render "home/result"
     rescue KakaocertException => pe
       @Response = pe
@@ -269,15 +299,30 @@ class KakaocertController < ApplicationController
     end
   end
 
-  # 자동이체 출금동의 요청결과를 확인합니다.
-  def getCMSResult
+  # 자동이체 출금동의 서명상태를 확인합니다.
+  def getCMSState
 
     # 자동이체 출금동의 요청시 반환받은 접수아이디
-    receiptId = "020062215381400001"
+    receiptId = "020090911192700001"
 
     begin
-      @Response = KCService.getCMSResult(KakaocertController::ClientCode, receiptId)
-      render "kakaocert/getCMSResult"
+      @Response = KCService.getCMSState(KakaocertController::ClientCode, receiptId)
+      render "kakaocert/getCMSState"
+    rescue KakaocertException => pe
+      @Response = pe
+      render "home/exception"
+    end
+  end
+
+  # 자동이체 출금동의 서명을 검증합니다.
+  def verifyCMS
+
+    # 자동이체 출금동의 요청시 반환받은 접수아이디
+    receiptId = "020090911192700001"
+
+    begin
+      @Response = KCService.verifyCMS(KakaocertController::ClientCode, receiptId)
+      render "kakaocert/responseVerify"
     rescue KakaocertException => pe
       @Response = pe
       render "home/exception"
