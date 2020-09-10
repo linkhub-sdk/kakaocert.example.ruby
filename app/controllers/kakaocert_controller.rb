@@ -2,7 +2,7 @@
 #
 # Kakaocert API Ruby On Rails SDK Example
 #
-# 업데이트 일자 : 2020-09-09
+# 업데이트 일자 : 2020-09-10
 # 연동기술지원 연락처 : 1600-9854 / 070-4304-2991~2
 # 연동기술지원 이메일 : code@linkhub.co.kr
 #
@@ -95,7 +95,7 @@ class KakaocertController < ApplicationController
     end
   end
 
-  # 전자서명 서명상태를 확인합니다.
+  # 전자서명 요청시 반환된 접수아이디를 통해 서명 상태를 확인합니다.
   def getESignState
 
     # 전자서명 요청시 반환받은 접수아이디
@@ -110,14 +110,15 @@ class KakaocertController < ApplicationController
     end
   end
 
-  # 전자서명 서명을 검증합니다.
+  # 전자서명 요청시 반환된 접수아이디를 통해 서명을 검증합니다.
+  # - 서명검증시 전자서명 데이터 전문(signedData)이 반환됩니다.
   def verifyESign
 
     # 전자서명 요청시 반환받은 접수아이디
     receiptId = "020090911171900002"
 
-    # AppToApp 인증 성공시 앱스킴으로 반환되는 signature값 기재
-    # Talk Message 인증시 공백처리
+    # AppToApp 앱스킴 성공처리시 반환되는 서명값(iOS-sig, Android-signature)
+    # Talk Message 인증시 공백
     signture = ""
 
     begin
@@ -194,7 +195,7 @@ class KakaocertController < ApplicationController
     end
   end
 
-  # 본인인증 서명상태를 확인합니다.
+  # 본인인증 요청시 반환된 접수아이디를 통해 서명 상태를 확인합니다.
   def getVerifyAuthState
 
     # 본인인증 요청시 반환받은 접수아이디
@@ -209,7 +210,9 @@ class KakaocertController < ApplicationController
     end
   end
 
-  # 본인인증 서명을 검증합니다.
+  # 본인인증 요청시 반환된 접수아이디를 통해 본인인증 서명을 검증합니다.
+  # - 서명검증시 전자서명 데이터 전문(signedData)이 반환됩니다.
+  # - 본인인증 요청시 작성한 Token과 서명 검증시 반환되는 signedData의 동일여부를 확인하여 본인인증 검증을 완료합니다.
   def verifyAuth
 
     # 본인인증 요청시 반환받은 접수아이디
@@ -299,7 +302,7 @@ class KakaocertController < ApplicationController
     end
   end
 
-  # 자동이체 출금동의 서명상태를 확인합니다.
+  # 자동이체 출금동의 요청시 반환된 접수아이디를 통해 서명 상태를 확인합니다.
   def getCMSState
 
     # 자동이체 출금동의 요청시 반환받은 접수아이디
@@ -314,7 +317,8 @@ class KakaocertController < ApplicationController
     end
   end
 
-  # 자동이체 출금동의 서명을 검증합니다.
+  # 자동이체 출금동의 요청시 반환된 접수아이디를 통해 서명을 검증합니다.
+  # - 서명검증시 전자서명 데이터 전문(signedData)이 반환됩니다.
   def verifyCMS
 
     # 자동이체 출금동의 요청시 반환받은 접수아이디
