@@ -27,6 +27,9 @@ class KakaocertController < ApplicationController
       KakaocertController::SecretKey
   )
 
+  # 카카오써트 API 서비스 고정 IP 사용여부, true-사용, false-미사용, 기본값(false)
+  KCService.setUseStaticIP(false)
+
   # 전자서명 인증을 요청합니다.
   def requestESign
 
