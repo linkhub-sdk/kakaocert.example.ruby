@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.3.0'
 
 # Kakaocert API 추가.
-gem 'kakaocert', '2.1.0'
+gem 'kakaocert', '2.50.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.3'
